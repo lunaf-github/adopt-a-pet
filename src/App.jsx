@@ -1,11 +1,12 @@
+import React from "react";
 
 const Pet = (props) => {
   const DogDescription = [
     React.createElement('h2', {}, props.name),
     React.createElement('h2', {}, props.animal),
     React.createElement('h2', {}, props.breed)
-  ]
-  return React.createElement('div',{} , DogDescription)
+  ];
+  return React.createElement('div',{} , DogDescription);
 }
 
 const App = () => {
@@ -31,6 +32,4 @@ const App = () => {
   );
 }
 
-const container = document.getElementById('root');
-const root = ReactDOM.createRoot(container);
-root.render(React.createElement(App));
+export default App;
