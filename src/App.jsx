@@ -1,34 +1,12 @@
 import React from "react";
-
-const Pet = (props) => {
-  const DogDescription = [
-    React.createElement('h2', {}, props.name),
-    React.createElement('h2', {}, props.animal),
-    React.createElement('h2', {}, props.breed)
-  ];
-  return React.createElement('div',{} , DogDescription);
-}
+import SearchParms from "./SearchParms";
 
 const App = () => {
-  const TitleCoponent = React.createElement('h1', {}, 'Adopt Me!');
-  return React.createElement('div', {}, [
-      TitleCoponent,
-      React.createElement(Pet, {
-        animal: "Dog", 
-        breed: "Havanese",
-        name: "Luna" 
-      }),
-      React.createElement(Pet, {
-       animal: "Bird", 
-       breed: "Cockatiel",
-       name: "Pepper" 
-      }),
-      React.createElement(Pet, {
-       animal: "Cat", 
-       breed: "Mixed",
-       name: "Doink" 
-      })
-    ]
+  return (
+    <div>
+      <h1>Adopt Me!</h1>
+      <SearchParms />
+    </div>
   );
 }
 
