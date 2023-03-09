@@ -1,5 +1,4 @@
 import React, {useState, useEffect}  from 'react';
-import Pet from './Pet';
 import useBreedList from './useBreedList';
 import Results from './Results';
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
@@ -90,10 +89,6 @@ const SearchParams = () => {
 
   function generateOption(option) {
      return <option key={option}>{option}</option>;
-  }
-
-  function generatePets(pet) {
-     return <Pet name={pet.name} animal={pet.animal} breed={pet.breed} key={pet.id} />
   }
 
   function noOptions(breeds) {
