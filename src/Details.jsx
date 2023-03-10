@@ -5,6 +5,8 @@ import fetchPet from './fetchPet';
 
 const Details = () => {
   const {id} = useParams();
+  const test = useParams();
+  console.log(test, 'useParams')
   const results = useQuery(["details", id], fetchPet);
   
   if (results.isLoading) {
