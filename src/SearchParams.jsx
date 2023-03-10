@@ -1,27 +1,20 @@
-import React, {useState, useEffect}  from 'react';
+import React, {useState}  from 'react';
+import {useQuery} from '@tanstack/react-query';
 import useBreedList from './useBreedList';
+import fetchSearch from './fetchSearch';
 import Results from './Results';
 const ANIMALS = ["bird", "cat", "dog", "rabbit", "reptile"];
 
 const SearchParams = () => {
-  const [location, setLocation] = useState("");
+  const [requestParams, setRequestParams] = useState({
+    location: "",
+    animal: "",
+    breed: ""
+  });
   const [animal, setAnimal] = useState("");
-  const [breed, setBreed] = useState("");
-  const [pets, setPets] = useState([]);
   const [breeds] = useBreedList(animal);
-
-  useEffect(() => {
-    requestPets();
-  },[]);
-
-  async function requestPets() {
-    const res = await fetch(
-     `http://pets-v2.dev-apis.com/pets?animal=${animal}&location=${location}&breed=${breed}`
-    );
-
-    const json = await res.json();
-    setPets(json.pets)
-  }
+  const results = useQuery(["search", requestParams], fetchSearch);
+  const pets = results?.data?.pets ?? [];
 
   return (
     <div className='search-params'>
@@ -31,8 +24,7 @@ const SearchParams = () => {
           <input 
             id="location" 
             placeholder="location" 
-            onChange={updateLocation} 
-            value={location} 
+            name = "location"
           />
         </label>
 
@@ -40,7 +32,7 @@ const SearchParams = () => {
           Animal
           <select 
             id="animal"
-            value={animal}
+            name = "animal"
             onChange={updateAnimal}
           >
             <option />
@@ -53,8 +45,7 @@ const SearchParams = () => {
           <select 
             id="breed"
             disabled ={noOptions(breeds)} 
-            value={breed}
-            onChange={updateBreed}
+            name="breed"
           >
             <option />
             {breeds.map(generateOption)}
@@ -69,22 +60,20 @@ const SearchParams = () => {
 
   // ***************************************
 
-  function updateLocation(e) {
-     setLocation(e.target.value);
-  }
-
   function updateAnimal(e) {
      setAnimal(e.target.value);
-     setBreed("");
-  }
-
-  function updateBreed(e) {
-     setBreed(e.target.value);
   }
   
   function submitForm(e) {
     e.preventDefault();
-    requestPets();
+    const formData = new FormData(e.target);
+    console.log(formData);
+    const obj = {
+      animal: formData.get("animal") ?? "",
+      breed: formData.get("breed") ?? "",
+      location: formData.get("location") ?? ""
+    }
+    setRequestParams(obj);
   }
 
   function generateOption(option) {
