@@ -1,4 +1,4 @@
-import React, {useState, useContext}  from 'react';
+import React, { useState, useContext, useDeferredValue, useMemo, useTransition }  from 'react';
 import {useQuery} from '@tanstack/react-query';
 import AdoptedPetContext from './AdoptedPetContext';
 import useBreedList from './useBreedList';
@@ -15,9 +15,14 @@ const SearchParams = () => {
   const [animal, setAnimal] = useState("");
   const [breeds] = useBreedList(animal);
   const [adoptedPet] = useContext(AdoptedPetContext);
-
+  const [isPending, startTransition] = useTransition();
   const results = useQuery(["search", requestParams], fetchSearch);
   const pets = results?.data?.pets ?? [];
+  const deferredPets = useDeferredValue(pets);
+  const renderedPets = useMemo(
+    () => <Results pets={deferredPets} />, 
+    [deferredPets]
+  );
 
   return (
     <div className='search-params'>
@@ -61,9 +66,17 @@ const SearchParams = () => {
             {breeds.map(generateOption)}
           </select>
         </label>
+        {
+          isPending? (
+            <div className='mini loading-pane'>
+               <h2 className='loader'>H</h2>
+            </div>
+          )
+        }
+
         <button>Submit</button>
       </form>
-      <Results pets={pets} />
+      {renderedPets}
 
     </div>
   );
@@ -83,6 +96,9 @@ const SearchParams = () => {
       breed: formData.get("breed") ?? "",
       location: formData.get("location") ?? ""
     }
+    startTransition(() => {
+      setRequestParams(obj);
+    });
     setRequestParams(obj);
   }
 
